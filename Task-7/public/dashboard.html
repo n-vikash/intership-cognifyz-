@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Dashboard</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .top-bar {
+      position: absolute;
+      top: 20px;
+      right: 30px;
+    }
+
+    .profile-icon {
+      background-color: #f57c00;
+      color: white;
+      font-weight: bold;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      text-align: center;
+      line-height: 40px;
+      cursor: pointer;
+    }
+
+    .weather-box {
+      margin-top: 20px;
+      text-align: center;
+      background-color: #2e2e2e;
+      padding: 20px;
+      border-radius: 10px;
+    }
+
+    .search {
+      margin-bottom: 10px;
+    }
+
+    .search input {
+      background-color: #2e2e2e;
+      border: none;
+      padding: 10px;
+      color: white;
+      width: 200px;
+      border-radius: 5px;
+    }
+
+    .search button {
+      padding: 10px;
+      background-color: #f57c00;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .city-buttons button {
+      margin: 5px;
+      padding: 10px;
+      background-color: #2e2e2e;
+      color: #fff;
+      border: 1px solid #f57c00;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <div class="top-bar">
+    <div class="profile-icon" id="profileIcon">?</div>
+  </div>
+
+  <div class="container">
+    <h2>🌤 Welcome to Daily Weather</h2>
+    <div class="search">
+      <input type="text" id="cityInput" placeholder="Enter city" />
+      <button onclick="getWeather()">Search</button>
+    </div>
+
+    <div class="weather-box" id="weatherDisplay">Search a city or click below</div>
+
+    <div class="city-buttons">
+      <button onclick="loadCity('Delhi')">Delhi</button>
+      <button onclick="loadCity('Mumbai')">Mumbai</button>
+      <button onclick="loadCity('New York')">New York</button>
+      <button onclick="loadCity('Tokyo')">Tokyo</button>
+    </div>
+
+    <a href="logout.html"><button style="margin-top: 20px;">Logout</button></a>
+  </div>
+
+  <script>
+    const token = localStorage.getItem("token");
+    const username = localStorage.getItem("username");
+
+    if (!token) {
+      window.location.href = "error.html";
+    }
+
+    document.getElementById("profileIcon").innerText = username ? username.charAt(0).toUpperCase() : "?";
+    document.getElementById("profileIcon").onclick = () => {
+      window.location.href = "profile.html";
+    };
+
+    function getWeather() {
+      const city = document.getElementById("cityInput").value;
+      if (city) {
+        loadCity(city);
+      }
+    }
+
+    function loadCity(city) {
+      const apiKey = "42fea0c756ea751526386d308533f919";
+      const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric`;
+
+      fetch(url)
+        .then(response => response.json())
+        .then(data => {
+          if (data.cod === 200) {
+            document.getElementById("weatherDisplay").innerHTML = `
+              <h3>${data.name}</h3>
+              <p>${data.weather[0].description}</p>
+              <p><strong>${data.main.temp}°C</strong></p>
+            `;
+          } else {
+            document.getElementById("weatherDisplay").innerText = "❌ City not found";
+          }
+        })
+        .catch(() => {
+          document.getElementById("weatherDisplay").innerText = "⚠ Error loading weather";
+        });
+    }
+  </script>
+</body>
+</html>

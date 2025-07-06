@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Submission Form</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <div class="form-wrapper">
+    <h2>Submission Form</h2>
+
+    <% if (error) { %>
+      <div class="error-msg server"><%= error %></div>
+    <% } %>
+
+    <form id="contactForm" action="/submit" method="POST" novalidate>
+      <input type="text" id="name" name="name" placeholder="Full Name" required>
+      <div class="error-msg" id="nameError">Name is required.</div>
+
+      <input type="email" id="email" name="email" placeholder="Email" required>
+      <div class="error-msg" id="emailError">Enter a valid email.</div>
+
+      <textarea id="message" name="message" placeholder="Your message..." required></textarea>
+      <div class="error-msg" id="messageError">Message must be at least 2 characters.</div>
+
+      <button type="submit" id="submitBtn" disabled>Submit</button>
+    </form>
+  </div>
+
+  <script>
+    const form = document.getElementById("contactForm");
+    const submitBtn = document.getElementById("submitBtn");
+
+    const nameInput = document.getElementById("name");
+    const emailInput = document.getElementById("email");
+    const messageInput = document.getElementById("message");
+
+    const nameError = document.getElementById("nameError");
+    const emailError = document.getElementById("emailError");
+    const messageError = document.getElementById("messageError");
+
+    const validateForm = () => {
+      const name = nameInput.value.trim();
+      const email = emailInput.value.trim();
+      const message = messageInput.value.trim();
+
+      const isValidEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+      const isValidMessage = message.length >= 2;
+
+      nameInput.classList.toggle("invalid", !name);
+      emailInput.classList.toggle("invalid", email && !isValidEmail);
+      messageInput.classList.toggle("invalid", message && !isValidMessage);
+
+      nameError.style.display = !name ? "block" : "none";
+      emailError.style.display = email && !isValidEmail ? "block" : "none";
+      messageError.style.display = message && !isValidMessage ? "block" : "none";
+
+      submitBtn.disabled = !(name && isValidEmail && isValidMessage);
+    };
+
+    form.querySelectorAll("input, textarea").forEach((input) => {
+      input.addEventListener("input", validateForm);
+      input.addEventListener("change", validateForm);
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Your Profile</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <h2>👤 Profile Info</h2>
+    <div><strong>Username:</strong> <span id="username"></span></div>
+    <div><strong>Email:</strong> <span id="email"></span></div>
+    <div><strong>Phone:</strong> <span id="phone"></span></div>
+    <div><strong>Gender:</strong> <span id="gender"></span></div>
+    <br />
+    <a href="dashboard.html"><button>⬅ Back to Dashboard</button></a>
+  </div>
+
+  <script>
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+      window.location.href = "error.html";
+    }
+
+    fetch("/api/profile", {
+      headers: { Authorization: `Bearer ${token}` }
+    })
+      .then(res => res.json())
+      .then(data => {
+        document.getElementById("username").innerText = data.username;
+        document.getElementById("email").innerText = data.email;
+        document.getElementById("phone").innerText = data.phone;
+        document.getElementById("gender").innerText = data.gender;
+      })
+      .catch(() => {
+        window.location.href = "error.html";
+      });
+  </script>
+</body>
+</html>

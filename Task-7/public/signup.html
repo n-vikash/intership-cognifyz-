@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Sign Up</title>
+  <link rel="stylesheet" href="style.css">
+
+</head>
+<body>
+  <form id="signupForm">
+    <h2>Sign Up</h2>
+    <input name="username" placeholder="Username" required />
+    <input type="email" name="email" placeholder="Email" required />
+    <input name="phone" placeholder="Phone Number" required />
+    <select name="gender" required>
+      <option value="">Select Gender</option>
+      <option>Male</option>
+      <option>Female</option>
+      <option>Prefer not to say</option>
+    </select>
+  <div class="form-group" style="position: relative;">
+  <input type="password" id="password" name="password" placeholder="Password" required />
+  
+  <label style="position: absolute; right: 0px; top: 55%; transform: translateY(-50%); display: flex; align-items: center;">
+    <input type="checkbox" id="showPassword" style="margin-right: 5px;" />
+    <span style="font-size: 12px;"></span>
+  </label>
+</div>
+
+
+
+
+    <button type="submit">Register</button>
+    <a href="signin.html">Already have an account?</a>
+  </form>
+<script>
+  const checkbox = document.getElementById("showPassword");
+  const passwordInput = document.getElementById("password");
+
+  checkbox.addEventListener("change", function () {
+    passwordInput.type = this.checked ? "text" : "password";
+  });
+</script>
+
+
+  <script>
+    document.getElementById("signupForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const form = e.target;
+      const data = {
+        username: form.username.value,
+        email: form.email.value,
+        phone: form.phone.value,
+        gender: form.gender.value,
+        password: form.password.value
+      };
+
+      const res = await fetch("/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data)
+      });
+
+      if (res.ok) {
+        window.location.href = "success.html";
+      } else {
+        alert("❌ Registration failed");
+      }
+    });
+  </script>
+</body>
+</html>
