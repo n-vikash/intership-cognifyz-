@@ -60,22 +60,44 @@ async function loadUsers() {
 
     users.forEach((user) => {
       const row = document.createElement("tr");
+
       row.innerHTML = `
         <td>${user.name}</td>
         <td>${user.email}</td>
         <td>
-          <button class="btn btn-sm btn-warning me-2" onclick="editUser(${user.id}, '${user.name}', '${user.email}')">Edit</button>
-          <button class="btn btn-sm btn-danger" onclick="deleteUser(${user.id})">Delete</button>
+          <button class="btn btn-sm btn-warning me-2 edit-btn">Edit</button>
+          <button class="btn btn-sm btn-danger delete-btn">Delete</button>
         </td>
       `;
+
+      // Attach user ID to the row
+      row.dataset.id = user.id;
+      row.dataset.name = user.name;
+      row.dataset.email = user.email;
+
       userTableBody.appendChild(row);
     });
+
+    // Attach event listeners to the new buttons
+    document.querySelectorAll(".edit-btn").forEach(btn => {
+      btn.addEventListener("click", (e) => {
+        const row = e.target.closest("tr");
+        editUser(row.dataset.id, row.dataset.name, row.dataset.email);
+      });
+    });
+
+    document.querySelectorAll(".delete-btn").forEach(btn => {
+      btn.addEventListener("click", async (e) => {
+        const row = e.target.closest("tr");
+        await deleteUser(row.dataset.id);
+      });
+    });
+
   } catch (err) {
     alert("Failed to load users");
     console.error(err);
   }
 }
-
 // Delete a user
 async function deleteUser(id) {
   if (!confirm("Are you sure you want to delete this user?")) return;
