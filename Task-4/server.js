@@ -16,7 +16,7 @@ app.post("/submit", (req, res) => {
   const { username, email, password, phoneCode, phone, gender } = req.body;
 
   const validEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-  const validPassword = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/.test(password); // special character optional
+  const validPassword = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/.test(password); // special character optional
   const validPhone = /^\d{10}$/.test(phone);
   const validPhoneCode = /^\+?\d{1,4}$/.test(phoneCode);
   const validGender = ["Male", "Female", "Prefer not to say"].includes(gender);

@@ -17,7 +17,10 @@
 
       
  <div class="form-group" style="position: relative;">
-  <input type="password" id="password" name="password" placeholder="Password" required />
+  <input type="password" id="password" name="password" placeholder="Password" required pattern="^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&]).{8,}$"
+  title="Password must be at least 8 characters, include a number and special character"/>
+
+
   
   <label style="position: absolute; right: 2px; top: 54%; transform: translateY(-50%); display: flex; align-items: center;">
     <input type="checkbox" id="showPassword" style="margin-right: 5px;" />

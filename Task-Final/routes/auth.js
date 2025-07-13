@@ -23,7 +23,12 @@ router.post("/signup", async (req, res) => {
   if (!username || !email || !phone || !password || !gender) {
     return res.render("signup", { error: "Please fill in all fields." });
   }
-
+const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+  if (!passwordRegex.test(password)) {
+    return res.render("signup", {
+      error: "Password must be at least 8 characters long and include a number and special character."
+    });
+  }
   try {
     const existing = await User.findOne({ email });
     if (existing) {
@@ -175,7 +180,13 @@ router.post("/reset-password", async (req, res) => {
   if (password !== confirmPassword) {
     return res.render("reset-password", { token, error: "Passwords do not match." });
   }
-
+const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+  if (!passwordRegex.test(password)) {
+    return res.render("reset-password", {
+      token,
+      error: "Password must be at least 8 characters long and include a number and special character."
+    });
+  }
   try {
     const user = await User.findOne({
       resetToken: token,
